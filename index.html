@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leafy - Your Plant Doctor & Friend</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-emerald-50 text-slate-800 font-sans min-h-screen flex flex-col relative">
+
+    <!-- Header -->
+    <header class="bg-emerald-700 text-white shadow-md py-4 px-6 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-seedling text-2xl"></i>
+            <h1 class="text-xl font-bold tracking-wide">Leafy, The Plant Doctor</h1>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="hidden sm:inline text-xs bg-emerald-600 px-3 py-1 rounded-full font-medium">Your Green Buddy 🌿</span>
+            <!-- Settings Button -->
+            <button id="openSettingsBtn" class="bg-emerald-800 hover:bg-emerald-900 text-white w-9 h-9 rounded-full flex items-center justify-center transition shadow-sm" title="Settings">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow container mx-auto p-4 max-w-2xl flex flex-col gap-6">
+        
+        <!-- Intro Card -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-emerald-100 text-center">
+            <h2 class="text-lg font-semibold text-emerald-800 mb-1">How is your green friend feeling today?</h2>
+            <p class="text-sm text-slate-500 mb-6">Snap a picture or upload a photo of your plant. Leafy will diagnose any issues and give you a friendly care strategy!</p>
+            
+            <!-- Upload / Capture Controls -->
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <label class="cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-6 py-3 rounded-xl transition flex items-center justify-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-camera"></i> Take / Upload Plant Photo
+                    <input type="file" id="imageInput" accept="image/*" capture="environment" class="hidden">
+                </label>
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div id="previewContainer" class="hidden bg-white p-4 rounded-2xl shadow-sm border border-emerald-100 flex flex-col items-center">
+            <p class="text-xs font-semibold text-slate-500 mb-2 self-start">Selected Plant Photo:</p>
+            <img id="imagePreview" class="max-h-64 rounded-xl object-contain border border-slate-200 mb-4" alt="Plant Preview">
+            <button id="diagnoseBtn" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-3 rounded-xl transition flex items-center justify-center gap-2 shadow-sm">
+                <i class="fa-solid fa-stethoscope"></i> Ask Plant Doctor
+            </button>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="hidden flex flex-col items-center justify-center py-10">
+            <div class="animate-spin rounded-full h-12 w-12 border-4 border-emerald-600 border-t-transparent mb-3"></div>
+            <p class="text-sm font-medium text-emerald-800 animate-pulse">Leafy is examining your plant's leaves and roots...</p>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultCard" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-emerald-100 space-y-4">
+            <div class="flex items-center justify-between border-b pb-3">
+                <h3 class="font-bold text-emerald-900 text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-prescription text-emerald-600"></i> Diagnosis & Care Plan
+                </h3>
+            </div>
+            <div id="resultContent" class="text-sm text-slate-700 space-y-3 leading-relaxed">
+                <!-- AI Response Populates Here -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Settings Modal / Drawer -->
+    <div id="settingsModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 border border-emerald-100 transform transition-all">
+            <div class="flex justify-between items-center mb-4 border-b pb-3">
+                <h3 class="font-bold text-emerald-900 text-base flex items-center gap-2">
+                    <i class="fa-solid fa-gear text-emerald-600"></i> App Settings
+                </h3>
+                <button id="closeSettingsBtn" class="text-slate-400 hover:text-slate-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Gemini API Key:</label>
+                    <input type="password" id="apiKeyInput" placeholder="Paste your API key here..." class="w-full text-sm px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <p class="text-[11px] text-slate-400 mt-1">Stored securely on your device's local storage forever (or until cleared).</p>
+                </div>
+                
+                <div id="apiKeyStatus" class="text-xs font-medium text-emerald-600 hidden">
+                    <i class="fa-solid fa-circle-check"></i> API Key is saved on this device!
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button id="saveSettingsBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-xl transition shadow-sm">
+                        Save Key
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 text-xs text-slate-400">
+        Built with ❤️ for plants and nature lovers. Hosted on GitHub Pages.
+    </footer>
+
+    <!-- Script -->
+    <script src="script.Api.js"></script>
+</body>
+</html>
